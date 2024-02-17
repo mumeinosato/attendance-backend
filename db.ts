@@ -51,41 +51,50 @@ export async function getPasswordNull(user: string): Promise<boolean> {
   }
 }
 
-/*export async function login(name: string, password: string): Promise<boolean> {
+export async function login(username: string, password: string): Promise<boolean> {
+  const userid = await getUserIdFromName(username);
+  if (userid === null) {
+    return false; // Return false if the user does not exist
+  }
   const user = await prisma.user.findUnique({
     where: {
-      name: name
+      id: userid,
     },
     select: {
       password: true
     },
   });
-  
-  if(!user){
+
+  if (!user) {
     return false;
   }
 
   const count = await prisma.user.count({
     where: {
-      name: name,
+      id: userid,
       password: password
     }
   });
   return count === 1;
 }
 
-export async function getAccountInfo(name: string): Promise<any> {
+export async function getAccountInfo(user: string): Promise<any> {
+  const userid = await getUserIdFromName(user);
+  if (userid === null) {
+    return false; // Return false if the user does not exist
+  }
   return prisma.user.findUnique({
     where: {
-      name: name
+      id: userid,
     },
   });
 }
 
-export async function setPassword(name: string, password: string): Promise<void> {
+export async function setPassword(user: string, password: string): Promise<void> {
+  const userid = await getUserIdFromName(user);
   await prisma.user.update({
     where: {
-      name: name,
+      id: userid !== null ? userid : undefined, // Add a null check before assigning the userid
     },
     data: {
       password: password,
@@ -93,13 +102,16 @@ export async function setPassword(name: string, password: string): Promise<void>
   });
 }
 
-export async function userExists(name: string): Promise<boolean> {
+export async function userExists(username: string): Promise<boolean> {
+  const userid = await getUserIdFromName(username);
+  if (userid === null) {
+    return false; // Return false if the user does not exist
+  }
   const user = await prisma.user.findUnique({
     where: {
-      name: name,
+      id: userid,
     },
   });
-  
+
   return user !== null;
 }
-*/

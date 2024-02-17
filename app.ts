@@ -1,6 +1,6 @@
 
 import { FastifyInstance, FastifyRequest } from 'fastify';
-import { getPasswordNull } from './db';
+import { getPasswordNull,  login, getAccountInfo, setPassword, userExists} from './db';
 
 /*app.get('/passwordNull/:name', async (request: FastifyRequest<{ Params: { name: string } }>, reply) => {
     const name = request.params.name;
@@ -72,5 +72,29 @@ module.exports = async function (fastify: FastifyInstance, opts: any) {
     const user = request.params.user;
     const isNull = await getPasswordNull(user);
     reply.send({ passwordIsNull: isNull });
+  });
+
+  fastify.post('/login', async (request: FastifyRequest<{ Body: { id: string, password: string } }>, reply) => {
+      const { id, password } = request.body;
+      const isLoggedIn = await login(id, password);
+      reply.send({ loggedIn: isLoggedIn });
+  });
+
+  fastify.get('/accountInfo/:id', async (request: FastifyRequest<{ Params: { id: string } }>, reply) => {
+          const id = request.params.id;
+          const accountInfo = await getAccountInfo(id);
+          reply.send(accountInfo);
+  });
+
+  fastify.post('/setPassword', async (request: FastifyRequest<{ Body: { id: string, password: string } }>, reply) => {
+      const { id, password } = request.body as { id: string, password: string };
+      await setPassword(id, password);
+      reply.send({ success: true });
+  });
+
+  fastify.get('/userExists/:name', async (request: FastifyRequest<{ Params: { name: string } }>, reply) => {
+      const name = request.params.name;
+      const exists = await userExists(name);
+      reply.send({ exists });
   });
 }
