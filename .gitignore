@@ -14,9 +14,12 @@ dist-ssr
 coverage
 *.local
 .env
+*.txt
+*.js
 
 /cypress/videos/
 /cypress/screenshots/
+/prisma/migrations/
 
 # Editor directories and files
 .vscode/*
