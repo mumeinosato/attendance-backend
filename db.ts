@@ -91,10 +91,15 @@ export async function getAccountInfo(user: string): Promise<any> {
 }
 
 export async function setPassword(user: string, password: string): Promise<void> {
-  const userid = await getUserIdFromName(user);
+  let userid = await getUserIdFromName(user);
+  if (userid === null) {
+    // ユーザーが存在しない場合の処理を追加する必要があります
+    throw new Error('指定されたユーザーが見つかりませんでした。');
+    userid = 0;
+  }
   await prisma.user.update({
     where: {
-      id: userid !== null ? userid : undefined, // Add a null check before assigning the userid
+      id: userid, // Add a null check before assigning the userid
     },
     data: {
       password: password,

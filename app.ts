@@ -29,10 +29,14 @@ module.exports = async function (fastify: FastifyInstance, opts: any) {
     reply.send(accountInfo);
   });
 
-  fastify.post('/setPassword', async (request: FastifyRequest<{ Body: { id: string, password: string } }>, reply) => {
-    const { id, password } = request.body as { id: string, password: string };
-    await setPassword(id, password);
-    reply.send({ success: true });
+  fastify.post('/setPassword', async (request, reply) => {
+    const { user, password } = request.body as { user: string, password: string };
+    try {
+      await setPassword(user, password);
+      reply.code(200).send({ message: 'パスワードが更新されました。' });
+    } catch (error) {
+      reply.code(500).send({ error: 'パスワードの更新中にエラーが発生しました。' });
+    }
   });
 
   fastify.get('/userExists/:name', async (request: FastifyRequest<{ Params: { name: string } }>, reply) => {
