@@ -1,6 +1,7 @@
 // 必要なモジュールをインポート
 import { FastifyInstance, FastifyRequest } from 'fastify';
-import { getPasswordNull, login, getAccountInfo, setPassword, userExists } from './db';
+import { login, setPassword, } from './account';
+import { getPasswordNull, getAccountInfo, userExists } from './account_info';
 import cores from '@fastify/cors';
 
 module.exports = async function (fastify: FastifyInstance, opts: any) {

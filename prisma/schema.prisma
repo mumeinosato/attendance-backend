@@ -18,6 +18,8 @@ model User {
   password String?
   admin    Int
   group    String    @default("fffff")
+  attendance Int @default(0)
+  absence Int  @default(0)
 }
 
 model Attendance{
