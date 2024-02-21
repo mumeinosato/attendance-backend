@@ -61,6 +61,7 @@ export async function accountList(): Promise<any> {
             user: true,
             name: true,
             admin: true,
+            group: true,
             attendance: true,
             absence: true,
         },
