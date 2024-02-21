@@ -1,8 +1,9 @@
 // 必要なモジュールをインポート
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { login, setPassword, } from './account';
-import { getPasswordNull, getAccountInfo, userExists } from './account_info';
+import { getPasswordNull, getAccountInfo, userExists, accountList } from './account_info';
 import cores from '@fastify/cors';
+import fastify = require('fastify');
 
 module.exports = async function (fastify: FastifyInstance, opts: any) {
   // CORSを有効にする
@@ -45,4 +46,10 @@ module.exports = async function (fastify: FastifyInstance, opts: any) {
     const exists = await userExists(name);
     reply.send({ exists });
   });
+
+  fastify.get('/accountList', async (request, reply) => {
+    const List = await accountList();
+    reply.send(List);
+  });
 }
+

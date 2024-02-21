@@ -54,3 +54,15 @@ export async function userExists(username: string): Promise<boolean> {
 
     return user !== null;
 }
+
+export async function accountList(): Promise<any> {
+    return prisma.user.findMany({
+        select: {
+            user: true,
+            name: true,
+            admin: true,
+            attendance: true,
+            absence: true,
+        },
+    });
+}
