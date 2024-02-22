@@ -1,6 +1,6 @@
 // 必要なモジュールをインポート
 import { FastifyInstance, FastifyRequest } from 'fastify';
-import { login, setPassword, } from './account';
+import { login, setPassword, createUser } from './account';
 import { getPasswordNull, getAccountInfo, userExists, accountList } from './account_info';
 import cores from '@fastify/cors';
 import fastify = require('fastify');
@@ -51,5 +51,15 @@ module.exports = async function (fastify: FastifyInstance, opts: any) {
     const List = await accountList();
     reply.send(List);
   });
-}
 
+  fastify.post('/createUser', async (request, reply) => {
+    const { user, name, admin, group } = request.body as { user: string, name: string, admin: number, group: string };
+    try {
+      await createUser(user, name, admin, group);
+      reply.code(200).send({ message: 'ユーザーが作成されました。' });
+    } catch (error) {
+      reply.code(500).send({ error: 'ユーザーの作成中にエラーが発生しました。' });
+      
+    }
+  });
+}

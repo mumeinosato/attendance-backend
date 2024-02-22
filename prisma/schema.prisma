@@ -30,3 +30,54 @@ model Attendance{
   updatedAt DateTime @updatedAt
   status  Int
 }
+
+model Status{
+  @@map("status")
+  id       Int      @id @default(autoincrement())
+  num1   Int?
+  num2   Int?
+  num3   Int?
+  num4   Int?
+  num5   Int?
+  string1 String?
+  string2 String?
+  string3 String?
+  string4 String?
+  string5 String?
+}
+
+model No_attendance{
+  @@map("no_attendance")
+  id       Int      @id @default(autoincrement())
+  user    String
+}
+
+model Notice{
+  @@map("notice")
+  id       Int      @id @default(autoincrement())
+  title    String
+  content  String
+  group    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user    String
+}
+
+model Task{
+  @@map("task")
+  id       Int      @id @default(autoincrement())
+  title    String
+  content  String
+  group    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user    String
+}
+
+model Task_status{
+  @@map("task_status")
+  id       Int      @id @default(autoincrement())
+  task_id Int
+  submission    String?
+  no_submission String?
+}
