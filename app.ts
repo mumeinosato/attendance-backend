@@ -1,7 +1,8 @@
 // 必要なモジュールをインポート
 import { FastifyInstance, FastifyRequest } from 'fastify';
-import { login, setPassword, createUser } from './account';
-import { getPasswordNull, getAccountInfo, userExists, accountList } from './account_info';
+import { login, setPassword, createUser } from './script/account';
+import { getPasswordNull, getAccountInfo, userExists, accountList } from './script/account_info';
+import { attendance } from './script/attendance';
 import cores from '@fastify/cors';
 import fastify = require('fastify');
 
@@ -60,6 +61,16 @@ module.exports = async function (fastify: FastifyInstance, opts: any) {
     } catch (error) {
       reply.code(500).send({ error: 'ユーザーの作成中にエラーが発生しました。' });
       
+    }
+  });
+
+  fastify.post('/attendance', async (request, reply) => {
+    const { user, status, reason } = request.body as { user: string, status: number, reason: string};
+    try {
+      await attendance(user, status, reason);
+      reply.code(200).send({ message: '出席情報が更新されました。' });
+    } catch (error) {
+      reply.code(500).send({ error: '出席情報の更新中にエラーが発生しました。' });
     }
   });
 }
