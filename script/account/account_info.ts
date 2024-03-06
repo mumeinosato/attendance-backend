@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { getUserIdFromName } from './name_to_id'
+import * as fs from 'fs';
 
 const prisma = new PrismaClient()
 
@@ -21,7 +22,6 @@ export async function getPasswordNull(userid: number): Promise<boolean> {
         if (!foundUser) {
             return false; // Return false if the user does not exist
         }
-
         if (foundUser.password === null) {
             return true; // Return true if the password is null
         } else {
@@ -41,6 +41,14 @@ export async function getAccountInfo(user: string): Promise<any> {
     return prisma.user.findUnique({
         where: {
             id: userid,
+        },
+        select: {
+            user: true,
+            name: true,
+            admin: true,
+            group: true,
+            attendance: true,
+            absence: true,
         },
     });
 }

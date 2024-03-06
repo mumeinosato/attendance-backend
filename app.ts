@@ -9,6 +9,8 @@ import cores from '@fastify/cors';
 import fastify = require('fastify');
 import { request } from 'http';
 
+import * as fs from 'fs';
+
 module.exports = async function (fastify: FastifyInstance, opts: any) {
   // CORSを有効にする
   await fastify.register(cores, {
@@ -17,15 +19,10 @@ module.exports = async function (fastify: FastifyInstance, opts: any) {
   });
 
   // ルートの定義
-  fastify.get('/passwordNull/:user', async (request, reply) => {
-    const { id } = request.params as { id: number };
-    const isNull = await getPasswordNull(id);
-    reply.send(isNull);
-  });
 
   fastify.post('/login', async (request, reply) => {
-    const { id, password } = request.body as { id: string, password: string };
-    const status = await login(id, password);
+    const { user, password } = request.body as { user: string, password: string };
+    const status = await login(user, password);
     reply.send(status);
   });
 

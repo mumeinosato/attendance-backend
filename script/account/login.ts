@@ -20,11 +20,10 @@ export async function login(user: string, password: string): Promise<number> {
         return 1;
     }
     if (await userExists(userid)) {
-        fs.writeFileSync('log.txt', String(await getPasswordNull(userid)));
         if(await getPasswordNull(userid)){
             return 3;
         }else{
-            const pass = await bcrypt.hash(password, 10);
+            const hashpass = await bcrypt.hash(password, 10);
             const users = await prisma.user.findUnique({
                 where: {
                     id: userid,
@@ -36,8 +35,8 @@ export async function login(user: string, password: string): Promise<number> {
             if(!users){
                 return 4;
             }
-            //fs.writeFileSync('log.txt', users.password + "|" + pass);
-            if (users.password === pass) {
+            const isMatch = await bcrypt.compare(password, String(users.password));
+            if (isMatch) {
                 status = 0;
             } else {
                 status = 2;
