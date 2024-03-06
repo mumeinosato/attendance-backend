@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { getUserIdFromName } from './name_to_id'
+import { getUserIdFromName } from './account/name_to_id'
 import { hash } from 'bcrypt';
 import * as bcrypt from 'bcrypt';
 
@@ -8,7 +8,7 @@ const prisma = new PrismaClient({
   log: ['query', 'info', 'warn', 'error'], // ログのレベルを設定する
 });
 
-export async function login(username: string, password: string): Promise<boolean> {
+/*export async function login(username: string, password: string): Promise<boolean> {
   const pass = await bcrypt.hash(password, 10);
   const userid = await getUserIdFromName(username);
   if (userid === null) {
@@ -34,7 +34,7 @@ export async function login(username: string, password: string): Promise<boolean
     }
   });
   return count === 1;
-}
+}*/
 
 export async function setPassword(user: string, password: string): Promise<void> {
   let userid = await getUserIdFromName(user);

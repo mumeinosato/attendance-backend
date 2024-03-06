@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { getUserIdFromName } from './name_to_id';
+import { getUserIdFromName } from './account/name_to_id';
 
 const prisma = new PrismaClient();
 

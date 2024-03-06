@@ -1,10 +1,13 @@
 // 必要なモジュールをインポート
 import { FastifyInstance, FastifyRequest } from 'fastify';
-import { login, setPassword, createUser } from './script/account';
-import { getPasswordNull, getAccountInfo, userExists, accountList } from './script/account_info';
+import { createUser } from './script/account';
+import { getPasswordNull, getAccountInfo, userExists, accountList } from './script/account/account_info';
 import { attendance } from './script/attendance';
+import { login } from './script/account/login';
+import { setpass } from './script/account/setpass';
 import cores from '@fastify/cors';
 import fastify = require('fastify');
+import { request } from 'http';
 
 module.exports = async function (fastify: FastifyInstance, opts: any) {
   // CORSを有効にする
@@ -14,16 +17,16 @@ module.exports = async function (fastify: FastifyInstance, opts: any) {
   });
 
   // ルートの定義
-  fastify.get('/passwordNull/:user', async (request: FastifyRequest<{ Params: { user: string } }>, reply) => {
-    const user = request.params.user;
-    const isNull = await getPasswordNull(user);
-    reply.send({ passwordIsNull: isNull });
+  fastify.get('/passwordNull/:user', async (request, reply) => {
+    const { id } = request.params as { id: number };
+    const isNull = await getPasswordNull(id);
+    reply.send(isNull);
   });
 
-  fastify.post('/login', async (request: FastifyRequest<{ Body: { id: string, password: string } }>, reply) => {
-    const { id, password } = request.body;
-    const isLoggedIn = await login(id, password);
-    reply.send({ loggedIn: isLoggedIn });
+  fastify.post('/login', async (request, reply) => {
+    const { id, password } = request.body as { id: string, password: string };
+    const status = await login(id, password);
+    reply.send(status);
   });
 
   fastify.get('/accountInfo/:id', async (request: FastifyRequest<{ Params: { id: string } }>, reply) => {
@@ -34,19 +37,15 @@ module.exports = async function (fastify: FastifyInstance, opts: any) {
 
   fastify.post('/setPassword', async (request, reply) => {
     const { user, password } = request.body as { user: string, password: string };
-    try {
-      await setPassword(user, password);
-      reply.code(200).send({ message: 'パスワードが更新されました。' });
-    } catch (error) {
-      reply.code(500).send({ error: 'パスワードの更新中にエラーが発生しました。' });
-    }
+    const status = await setpass(user, password);
+    reply.send(status);
   });
 
-  fastify.get('/userExists/:name', async (request: FastifyRequest<{ Params: { name: string } }>, reply) => {
+  /*fastify.get('/userExists/:name', async (request: FastifyRequest<{ Params: { name: string } }>, reply) => {
     const name = request.params.name;
     const exists = await userExists(name);
     reply.send({ exists });
-  });
+  });*/
 
   fastify.get('/accountList', async (request, reply) => {
     const List = await accountList();

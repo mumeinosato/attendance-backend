@@ -46,10 +46,15 @@ model Status{
   string5 String?
 }
 
-model No_attendance{
-  @@map("no_attendance")
+model Attendance_status{  
+  @@map("attendance_status")
   id       Int      @id @default(autoincrement())
-  user    String
+  status0 String?
+  status1 String?
+  status2 String?
+  status3 String?
+  Start   DateTime @default(now())
+  End      DateTime @default(now())
 }
 
 model Notice{

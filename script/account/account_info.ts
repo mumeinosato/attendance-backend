@@ -3,9 +3,9 @@ import { getUserIdFromName } from './name_to_id'
 
 const prisma = new PrismaClient()
 
-export async function getPasswordNull(user: string): Promise<boolean> {
+export async function getPasswordNull(userid: number): Promise<boolean> {
     try {
-        const userid = await getUserIdFromName(user);
+        //const userid = await getUserIdFromName(user);
         if (userid === null) {
             return false; // Return false if the user does not exist
         }
@@ -22,7 +22,11 @@ export async function getPasswordNull(user: string): Promise<boolean> {
             return false; // Return false if the user does not exist
         }
 
-        return foundUser.password === null;
+        if (foundUser.password === null) {
+            return true; // Return true if the password is null
+        } else {
+            return false; // Return false if the password is not null
+        }
     } catch (error) {
         console.error('Error executing query:', error);
         throw error;
@@ -41,8 +45,8 @@ export async function getAccountInfo(user: string): Promise<any> {
     });
 }
 
-export async function userExists(username: string): Promise<boolean> {
-    const userid = await getUserIdFromName(username);
+export async function userExists(userid: number): Promise<boolean> {
+    //const userid = await getUserIdFromName(username);
     if (userid === null) {
         return false; // Return false if the user does not exist
     }
